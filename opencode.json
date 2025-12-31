@@ -1,0 +1,528 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "hermes",
+  "agent": {
+    "hermes": {
+      "description": "Main orchestrator agent. Analyzes requests, researches project context, decomposes tasks, and delegates to specialized subagents.",
+      "mode": "primary",
+      "model": "openai/gpt-5.2-high",
+      "tools": {
+        "task": true,
+        "bash": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "list": false,
+        "glob": false,
+        "grep": false,
+        "webfetch": false,
+        "todowrite": true,
+        "todoread": true
+      }
+    },
+    "finder": {
+      "description": "Fast codebase scout. Finds files, code, and patterns on request.",
+      "mode": "subagent",
+      "model": "google/gemini-3-flash",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "analyst": {
+      "description": "Deep code analyst. Understands how code works, traces dependencies, identifies risks and side effects.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "researcher": {
+      "description": "External knowledge researcher. Searches web, documentation, and best practices for solutions.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-low",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": true,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "architect": {
+      "description": "Solution architect. Designs system structure, components, interfaces, and integration points.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-opus-4-5-thinking-medium",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": false
+      }
+    },
+    "planner": {
+      "description": "Task decomposer. Breaks down architectural designs into atomic, executable tasks.",
+      "mode": "subagent",
+      "model": "google/gemini-3-flash",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": false,
+        "todowrite": true,
+        "todoread": true
+      }
+    },
+    "coder": {
+      "description": "Code writer. Creates new files, functions, classes based on design and task specifications.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-opus-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "editor": {
+      "description": "Code editor. Modifies existing files, adds features to existing code, integrates components.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-opus-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "fixer": {
+      "description": "Bug fixer. Fixes bugs with minimal changes based on debugger diagnosis or error reports.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "refactorer": {
+      "description": "Code refactorer. Improves code structure without changing behavior.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "reviewer": {
+      "description": "Code reviewer. Reviews code changes for quality, best practices, and potential issues.",
+      "mode": "subagent",
+      "model": "openai/gpt-5.2-codex-xhigh",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "tester": {
+      "description": "Test engineer. Writes and runs tests to verify code correctness and coverage.",
+      "mode": "subagent",
+      "model": "openai/gpt-5.2-codex-xhigh",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "debugger": {
+      "description": "Bug investigator. Finds root cause of bugs through systematic analysis and tracing.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "security": {
+      "description": "Security auditor. Audits code for vulnerabilities, security best practices, and compliance.",
+      "mode": "subagent",
+      "model": "openai/gpt-5.2-codex-xhigh",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": false,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "documenter": {
+      "description": "Technical writer. Creates and updates technical documentation, README files, and API docs.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-medium",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "commenter": {
+      "description": "Code commenter. Adds JSDoc, inline comments, and code documentation to improve readability.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-low",
+      "tools": {
+        "task": false,
+        "bash": false,
+        "read": true,
+        "write": false,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "devops": {
+      "description": "DevOps engineer. Manages CI/CD pipelines, Docker configurations, deployment scripts, and infrastructure.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-medium",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    },
+    "optimizer": {
+      "description": "Performance optimizer. Analyzes and improves code performance, memory usage, and efficiency.",
+      "mode": "subagent",
+      "model": "google/gemini-claude-sonnet-4-5-thinking-high",
+      "tools": {
+        "task": false,
+        "bash": true,
+        "read": true,
+        "write": true,
+        "edit": true,
+        "list": true,
+        "glob": true,
+        "grep": true,
+        "lsp": true,
+        "webfetch": false,
+        "todowrite": false,
+        "todoread": true
+      }
+    }
+  },
+  "plugin": [
+    "opencode-openai-codex-auth@4.2.0",
+    "opencode-google-antigravity-auth"
+  ],
+  "provider": {
+    "openai": {
+      "options": {
+        "reasoningEffort": "medium",
+        "reasoningSummary": "auto",
+        "textVerbosity": "medium",
+        "include": ["reasoning.encrypted_content"],
+        "store": false
+      },
+      "models": {
+        "gpt-5.2-low": {
+          "name": "GPT 5.2 Low (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "low",
+            "reasoningSummary": "auto",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-medium": {
+          "name": "GPT 5.2 Medium (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "medium",
+            "reasoningSummary": "auto",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-high": {
+          "name": "GPT 5.2 High (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "high",
+            "reasoningSummary": "detailed",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-xhigh": {
+          "name": "GPT 5.2 Extra High (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "xhigh",
+            "reasoningSummary": "detailed",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-codex-low": {
+          "name": "GPT 5.2 Codex Low (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "low",
+            "reasoningSummary": "auto",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-codex-medium": {
+          "name": "GPT 5.2 Codex Medium (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "medium",
+            "reasoningSummary": "auto",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-codex-high": {
+          "name": "GPT 5.2 Codex High (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "high",
+            "reasoningSummary": "detailed",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        },
+        "gpt-5.2-codex-xhigh": {
+          "name": "GPT 5.2 Codex Extra High (Private)",
+          "limit": { "context": 272000, "output": 128000 },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "options": {
+            "reasoningEffort": "xhigh",
+            "reasoningSummary": "detailed",
+            "textVerbosity": "medium",
+            "include": ["reasoning.encrypted_content"],
+            "store": false
+          }
+        }
+      }
+    },
+    "google": {
+      "models": {
+        "gemini-3-pro-low": {
+          "id": "gemini-3-pro-preview",
+          "name": "Gemini 3 Pro Low (Private)",
+          "limit": { "context": 1000000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "video", "audio", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingLevel": "low", "includeThoughts": true } }
+        },
+        "gemini-3-pro-high": {
+          "id": "gemini-3-pro-preview",
+          "name": "Gemini 3 Pro High (Private)",
+          "limit": { "context": 1000000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "video", "audio", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingLevel": "high", "includeThoughts": true } }
+        },
+        "gemini-3-flash": {
+          "id": "gemini-3-flash",
+          "name": "Gemini 3 Flash (Private)",
+          "limit": { "context": 1048576, "output": 65536 },
+          "modalities": { "input": ["text", "image", "video", "audio", "pdf"], "output": ["text"] }
+        },
+        "gemini-claude-sonnet-4-5": {
+          "id": "gemini-claude-sonnet-4-5",
+          "name": "Claude Sonnet 4.5 (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] }
+        },
+        "gemini-claude-sonnet-4-5-thinking-low": {
+          "id": "gemini-claude-sonnet-4-5-thinking",
+          "name": "Claude Sonnet 4.5 Thinking Low (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingBudget": 4000, "includeThoughts": true } }
+        },
+        "gemini-claude-sonnet-4-5-thinking-medium": {
+          "id": "gemini-claude-sonnet-4-5-thinking",
+          "name": "Claude Sonnet 4.5 Thinking Medium (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingBudget": 16000, "includeThoughts": true } }
+        },
+        "gemini-claude-sonnet-4-5-thinking-high": {
+          "id": "gemini-claude-sonnet-4-5-thinking",
+          "name": "Claude Sonnet 4.5 Thinking High (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingBudget": 32000, "includeThoughts": true } }
+        },
+        "gemini-claude-opus-4-5-thinking-low": {
+          "id": "gemini-claude-opus-4-5-thinking",
+          "name": "Claude Opus 4.5 Thinking Low (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingBudget": 4000, "includeThoughts": true } }
+        },
+        "gemini-claude-opus-4-5-thinking-medium": {
+          "id": "gemini-claude-opus-4-5-thinking",
+          "name": "Claude Opus 4.5 Thinking Medium (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingBudget": 16000, "includeThoughts": true } }
+        },
+        "gemini-claude-opus-4-5-thinking-high": {
+          "id": "gemini-claude-opus-4-5-thinking",
+          "name": "Claude Opus 4.5 Thinking High (Private)",
+          "limit": { "context": 200000, "output": 64000 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "options": { "thinkingConfig": { "thinkingBudget": 32000, "includeThoughts": true } }
+        }
+      }
+    }
+  },
+
+  "lsp": {}
+}

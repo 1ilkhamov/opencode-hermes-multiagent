@@ -1,0 +1,15 @@
+{
+  "name": "opencode-multi-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "bun run --bun tsc --noEmit"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "1.0.218"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/bun": "latest"
+  }
+}
